@@ -26,6 +26,7 @@
 		8635DD60200FF026006E6AA3 /* morze */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = morze; sourceTree = BUILT_PRODUCTS_DIR; };
 		8635DD63200FF026006E6AA3 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8635DD6A200FF084006E6AA3 /* deque.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = deque.h; sourceTree = "<group>"; };
+		86F5058D20192EDA00296F35 /* basicMethods.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = basicMethods.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +61,7 @@
 			children = (
 				8635DD63200FF026006E6AA3 /* main.cpp */,
 				8635DD6A200FF084006E6AA3 /* deque.h */,
+				86F5058D20192EDA00296F35 /* basicMethods.h */,
 			);
 			path = morze;
 			sourceTree = "<group>";

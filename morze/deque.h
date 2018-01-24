@@ -15,7 +15,7 @@
 #include <time.h>
 #include <math.h>
 
-#define debugMode
+//#define debugMode
 
 enum { NONE, LOW, MEDIUM, FULL };
 
@@ -39,6 +39,9 @@ const char poisonChar = '~';
 template <typename typeOfData> class Deque
     {
     public:
+        std::mutex lock;
+        
+    
 //        Deque ( size_t bufferSizeTemp, int securityLevelTemp )
         Deque ( size_t bufferSizeTemp )
             {
@@ -226,7 +229,8 @@ template <typename typeOfData> class Deque
             
         bool pop_front()
             {
-            lock.lock();
+            
+            lock.try_lock();
             
             #ifdef debugMode
             
@@ -255,7 +259,10 @@ template <typename typeOfData> class Deque
                     beginDataPointer++;
                     }
                     
-                lock.unlock();
+//                if ( lock.try_lock() == true )
+                    {
+                    lock.unlock();
+                    }
                     
                 return true;
                 }
@@ -330,20 +337,22 @@ template <typename typeOfData> class Deque
     
     
     private:
+    
+        size_t bufferSize = 0;
         //// ------------------------------------------------------------------------------------------------
-        typeOfData* buffer = new typeOfData [ bufferSize ] {};
+        typeOfData* buffer = new typeOfData [ 512 ] {};
         typeOfData* bufferEnd = nullptr;
         typeOfData* beginDataPointer = nullptr;
         typeOfData* endDataPointer = nullptr;
     
         
-        size_t bufferSize = 0;
+        
         //// ------------------------------------------------------------------------------------------------
         int securityLevel = NONE;
         typeOfData poisonValue = NULL;
         std::string errorList = "";
         //// ------------------------------------------------------------------------------------------------
-        std::recursive_mutex lock;
+//        std::mutex lock;
         //// ------------------------------------------------------------------------------------------------
         
         //// ------------------------------------------------------------------------------------------------

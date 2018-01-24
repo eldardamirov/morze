@@ -15,6 +15,7 @@
 #include <thread>
 
 #include "deque.h"
+#include "basicMethods.h"
 
 enum { silence, dot, dash }; 
 
@@ -24,7 +25,7 @@ enum { silence, dot, dash };
 class morzeEncryptor
     {
     public:
-        morzeEncryptor ( std::string voiceTemp ) : messages ( 1024 )
+        morzeEncryptor ( std::string voiceTemp ) : messages ( 512 ), tempY ( 10 )
             {
             voice = voiceTemp;
             
@@ -51,6 +52,8 @@ class morzeEncryptor
         
         Deque <int> messages;
         
+        Deque <int> tempY;
+        
         void init()
             {
             std::string temp  = "say -v " + voice + " 'beep'"; 
@@ -59,7 +62,39 @@ class morzeEncryptor
             temp = "say -v " + voice + " 'beeeeeep'";
             commandForDash = &temp [ 0 ];
             
-            controller ( std::ref ( isFinish ) );
+//            controller ( std::ref ( isFinish ) );
+//            printf ( "I was here!" );
+//            messages.push_back ( dot );
+//            messages.push_back ( dot );
+//            messages.push_back ( dot );
+//            messages.push_back ( dot );
+//            messages.push_back ( dash );
+
+            
+            
+//            auto controller = std::thread ( [ this ] { this->controller ( std::ref ( messages ), std::ref ( isFinish ) ); } );
+            auto controller = std::thread ( [ this ] { this->controller ( std::ref ( tempY ), std::ref ( isFinish ) ); } );
+//            auto controller = std::thread ( this->controller ( std::ref ( messages ) , std::ref ( isFinish ) ) );
+
+            controller.detach();
+//            controller.join();
+            
+            
+            auto speaker = std::thread ( [ this ] { this->speaker ( std::ref ( messages ), std::ref ( isFinish ) ); } );
+            speaker.detach();
+//            speaker.join();
+            
+            
+            usleep ( 1000000000000 );
+            usleep ( 1000000000000 );
+            usleep ( 1000000000000 );
+            usleep ( 1000000000000 );
+            usleep ( 1000000000000 );
+
+//            printf ( "I was here!" );
+//            speaker ( std::ref ( messages ) , std::ref ( isFinish ) );
+            
+            
             }
         
         
@@ -69,9 +104,9 @@ class morzeEncryptor
             char currentChar = ' ';
             
             
-            while ( currentChar != '/' )
+            while ( currentChar != '*' )
                 {
-                currentChar = getchar();
+                currentChar = getche();
                 
                 encryptChar ( currentChar );
                 
@@ -83,10 +118,35 @@ class morzeEncryptor
             
         void speaker ( Deque <int>& messages, bool& isFinish )
             {
+            printf ( "I was here!" );
             while ( isFinish != true )
                 {
+//                printf ( "I was here!" );
                 if ( messages.size() > 0 )
                     {
+                    if ( *messages.front() == silence )
+                        {
+                        usleep ( spaceBetweenSignals );
+                        }
+                    
+                    if ( *messages.front() == dash )
+                        {
+                        printf ( "\nBBBI was here!" );
+                        playSymbol ( dash );
+                        }
+                        
+                    if ( *messages.front() == dot )
+                        {
+                        printf ( "\nBBBI was here!" );
+                        playSymbol ( dot );
+                        }
+                    
+//                    usleep ( 10 );
+                    
+//                    if ( messages.lock.try_lock() == true )
+                        {
+                        messages.pop_front();
+                        }
                     
                     }
                 }
@@ -405,13 +465,18 @@ class morzeEncryptor
         void playSymbol ( int symbol )
             {
             
+            printf ( "\nGGG I was here!" );
+            
             if ( symbol == dot )
                 {
-                system ( commandForDot );
+                printf ( "\n\nGGGGGGGGG\n\n" );
+//                system ( commandForDot );
+                system ( "say -v Bells Beep" );
                 }
             
             if ( symbol == dash )
                 {
+                printf ( "GGGGGGGGG" );
                 system ( commandForDash );
                 }
                 
@@ -444,6 +509,10 @@ int main(int argc, const char * argv[])
             char* commandForDot = &temp [ 0 ];
     
     system ( commandForDot );
+    
+    
+    morzeEncryptor myMurzik ( "Bells" );
+    
 
 
     
