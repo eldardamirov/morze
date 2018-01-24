@@ -42,6 +42,7 @@ template <typename typeOfData> class Deque
 //        Deque ( size_t bufferSizeTemp, int securityLevelTemp )
         Deque ( size_t bufferSizeTemp )
             {
+            
             bufferSize = bufferSizeTemp;
             
             bufferEnd = buffer + ( bufferSize - 1 );
@@ -84,6 +85,8 @@ template <typename typeOfData> class Deque
             
         bool push_back ( typeOfData valueToPush )
             {
+            lock.lock();
+            
             if ( endDataPointer != beginDataPointer )
                 {
                 *endDataPointer = valueToPush;
@@ -97,6 +100,8 @@ template <typename typeOfData> class Deque
                         }
                     else
                         {
+                        lock.unlock();
+                        
                         return false;
                         }
                     }
@@ -108,20 +113,29 @@ template <typename typeOfData> class Deque
                         }
                     else
                         {
+                        lock.unlock();
+                        
                         return false;
                         }
                     }
+                    
+                lock.unlock();
                 
                 return true;
                 }
             else
                 {
+                lock.unlock();
+                
                 return false;
                 }
+                
             }
             
         bool push_front ( typeOfData valueToPush )
             {
+            lock.lock();
+            
             if ( beginDataPointer != endDataPointer )
                 {
                 *beginDataPointer = valueToPush;
@@ -134,6 +148,8 @@ template <typename typeOfData> class Deque
                         }
                     else
                         {
+                        lock.unlock();
+                        
                         return false;
                         }
                     }
@@ -145,15 +161,20 @@ template <typename typeOfData> class Deque
                         }
                     else
                         {
+                        lock.unlock();
+                        
                         return false;
                         }
                     }
                     
+                lock.unlock();
                     
                 return true;
                 }
             else 
                 {
+                lock.unlock();
+                
                 return false;
                 }
                 
@@ -163,6 +184,7 @@ template <typename typeOfData> class Deque
             
         bool pop_back()
             {
+            lock.lock();
             
             #ifdef debugMode
             
@@ -180,6 +202,8 @@ template <typename typeOfData> class Deque
                         }
                     else
                         {
+                        lock.unlock();
+                        
                         return false;
                         }
                     }
@@ -188,16 +212,21 @@ template <typename typeOfData> class Deque
                     endDataPointer--;
                     }
                     
+                lock.unlock();
+                    
                 return true;
                 }
             else
                 {
+                lock.unlock();
+                
                 return false;
                 }
             }
             
         bool pop_front()
             {
+            lock.lock();
             
             #ifdef debugMode
             
@@ -216,6 +245,8 @@ template <typename typeOfData> class Deque
                         }
                     else
                         {
+                        lock.unlock();
+                        
                         return false;
                         }
                     }
@@ -224,10 +255,14 @@ template <typename typeOfData> class Deque
                     beginDataPointer++;
                     }
                     
+                lock.unlock();
+                    
                 return true;
                 }
             else
                 {
+                lock.unlock();
+                
                 return false;
                 }
                 
@@ -308,7 +343,7 @@ template <typename typeOfData> class Deque
         typeOfData poisonValue = NULL;
         std::string errorList = "";
         //// ------------------------------------------------------------------------------------------------
-        
+        std::recursive_mutex lock;
         //// ------------------------------------------------------------------------------------------------
         
         //// ------------------------------------------------------------------------------------------------

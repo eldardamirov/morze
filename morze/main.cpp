@@ -19,12 +19,13 @@
 enum { silence, dot, dash }; 
 
 
+
+
 class morzeEncryptor
     {
     public:
         morzeEncryptor ( std::string voiceTemp ) : messages ( 1024 )
             {
-            
             voice = voiceTemp;
             
             init();
@@ -44,6 +45,8 @@ class morzeEncryptor
         char* commandForDot = "";
         char* commandForDash = "";
         
+        bool isFinish = false;
+        
         int spaceBetweenSignals = 500000; // in milliseconds;
         
         Deque <int> messages;
@@ -56,27 +59,41 @@ class morzeEncryptor
             temp = "say -v " + voice + " 'beeeeeep'";
             commandForDash = &temp [ 0 ];
             
-            controller();
+            controller ( std::ref ( isFinish ) );
             }
         
         
         
-        void controller()
+        void controller ( Deque <int>& messages, bool& isFinish )
             {
             char currentChar = ' ';
             
             
             while ( currentChar != '/' )
                 {
-                std::cin >> currentChar;
+                currentChar = getchar();
                 
                 encryptChar ( currentChar );
                 
                 }
+                
+            isFinish = true;
+            }
             
             
+        void speaker ( Deque <int>& messages, bool& isFinish )
+            {
+            while ( isFinish != true )
+                {
+                if ( messages.size() > 0 )
+                    {
+                    
+                    }
+                }
             }
         
+        
+// chip eight;
         
         int encryptChar ( char currentCharTemp )
             {
